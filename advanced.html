@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DrawMy.Site</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@next/css/pico.min.css" />
+    <style>
+	  header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header nav ul {
+      margin: 0;
+    }
+	  main, footer{
+      text-align: center;
+    }
+    .hero {
+      margin: 0;
+    }
+    .form {
+      margin-bottom: 2rem;
+    }
+    #outputURLSection1{
+	      margin-top: 1rem;
+	  }
+    #outputURLSection2{
+	      margin-top: 1rem;
+	  }
+
+    </style>
+  </head>
+  <body>
+	  <header class="container">
+      <a href="/" class="contrast">DrawMy.Site</a>
+      <nav>
+        <ul>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </nav>
+    </header>
+	
+	  <main class="container">
+
+      <div class="hero">
+        <h3>Create a website for a single file</h3>
+        <p>
+        This allows you share a single file. Markdown (.md) or Jupyter Notebook (.ipynb)
+        </p>
+	    </div>
+
+      <div class="form">
+        <input id="githubrawfile" type="text" placeholder="A GitHub raw file to share like: https://raw.githubusercontent.com/user/repo/refs/heads/main/solution.ipynb" value="" /><br/>
+        <button id="encodeButton1">Create my URL to share</button>
+        <div id="outputURLSection1" style="display:none">
+          <label for="outputEncodedString1" >
+            Share this URL with anyone you want:
+            <textarea id="outputEncodedString1" readonly="" placeholder=""></textarea>
+          </label>
+          <button id="copyUrlButton1">Copy url to clipboard</button>
+        </div>
+		  </div>
+
+      <div class="hero">
+        <h3>Create a website for a github repo</h3>
+        <p>
+        This allows you to specify which files and folders to hide or show in the website.
+        </p>
+	    </div>
+
+      <div class="form">
+        <input id="githubusername" type="text" placeholder="A GitHub username, like: microsoft" value="" /><br/>
+        <input id="githubrepo" type="text" placeholder="A GitHub repo, like: AI-For-Beginners" value="" /><br/>
+        <input id="filestohide" type="text" placeholder="Files and folders to hide separated by comma like: extras,README.md" value="" /><br/>
+        <input id="filestoshow" type="text" placeholder="Files and folders to show separated by comma like: lessons,mynotebook.ipynb" value="" /><br/>
+        <button id="encodeButton2">Create my URL to share</button>
+        <div id="outputURLSection2" style="display:none">
+          <label for="outputEncodedString2" >
+            Share this URL with anyone you want:
+            <textarea id="outputEncodedString2" readonly="" placeholder=""></textarea>
+          </label>
+          <button id="copyUrlButton2">Copy url to clipboard</button>
+        </div>
+		  </div>
+
+      
+	  
+    </main>
+
+    <footer class="container">
+      <small>&copy; <span id="currentYear"></span> DrawMy.Site All rights reserved.</small>
+    </footer>
+	<script>
+
+    // Scripts used:
+    // - marked: for parsing markdown files: https://github.com/markedjs/marked
+    // - notebookjs: for parsing Jupyter notebooks: https://github.com/jsvine/notebookjs
+    // - dompurify: for sanitizing HTML content: https://github.com/cure53/DOMPurify
+    // - ansi-up: for converting ANSI escape codes to HTML: https://github.com/drudru/ansi_up
+    // - prismjs: for syntax highlighting: https://prismjs.com
+
+    // --- Global Variables ---
+    var GITHUB_USER = "";
+    var GITHUB_REPO = "";
+    var GITHUB_REPO_BRANCH = "";
+    var BASE_URL = "";
+    
+
+    // --- UI Elements and Event Listeners ---
+    // Get references to all necessary DOM elements
+    
+    
+    const githubrawfile = document.getElementById('githubrawfile');
+    const encodeButton1 = document.getElementById('encodeButton1');
+    const outputEncodedString1 = document.getElementById('outputEncodedString1');
+    const outputURLSection1 = document.getElementById('outputURLSection1');
+    const copyUrlButton1 = document.getElementById('copyUrlButton1');
+
+    const githubusername = document.getElementById('githubusername');
+    const githubrepo = document.getElementById('githubrepo');
+    const encodeButton2 = document.getElementById('encodeButton2');
+    const outputEncodedString2 = document.getElementById('outputEncodedString2');
+    const outputURLSection2 = document.getElementById('outputURLSection2');
+    const copyUrlButton2 = document.getElementById('copyUrlButton2');
+
+    document.getElementById('currentYear').innerHTML = new Date().getFullYear();
+
+
+    // Event listener for the Encode button click
+    // This will encode the input string and display the encoded URL
+    encodeButton1.addEventListener('click', () => {
+      const githubrawfileValue = githubrawfile.value.trim();
+      if (githubrawfileValue) {
+        var encodedUrl = encodeURIComponent(githubrawfileValue);
+        outputEncodedString1.value = "https://drawmy.site/?url=" + encodedUrl;
+        outputURLSection1.style.display = "block";
+      }
+    });
+
+    // Event listener for the Copy URL button click
+    // This will copy the encoded URL to the clipboard
+    copyUrlButton1.addEventListener('click', () => {
+            const textarea = document.getElementById('outputEncodedString1');
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); // For mobile devices
+            try {
+                const successful = document.execCommand('copy');
+                const msg = successful ? 'URL copied successfully!' : 'Failed to copy URL.';
+                copyUrlButton1.innerText = msg;
+            } catch (err) {
+                copyUrlButton1.innerText = "Error when copying the url.";
+            }
+    });
+
+
+    // Event listener for the Encode button click
+    // This will encode the input string and display the encoded URL
+    encodeButton2.addEventListener('click', () => {
+      const githubUsernameValue = githubusername.value.trim();
+      const githubRepoValue = githubrepo.value.trim();
+      if (githubUsernameValue && githubRepoValue) {
+        var encodedRepoUrl = encodeURIComponent(githubUsernameValue + "/" + githubRepoValue);
+        var filesToShow = encodeURIComponent(document.getElementById('filestoshow').value.trim());
+        var filesToHide = encodeURIComponent(document.getElementById('filestohide').value.trim());
+        outputEncodedString2.value = "https://drawmy.site/?url=" + encodedRepoUrl + "&show=" + filesToShow + "&hide=" + filesToHide;
+        outputURLSection2.style.display = "block";
+      }
+    });
+
+    // Event listener for the Copy URL button click
+    // This will copy the encoded URL to the clipboard
+    copyUrlButton2.addEventListener('click', () => {
+            const textarea = document.getElementById('outputEncodedString2');
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); // For mobile devices
+            try {
+                const successful = document.execCommand('copy');
+                const msg = successful ? 'URL copied successfully!' : 'Failed to copy URL.';
+                copyUrlButton2.innerText = msg;
+            } catch (err) {
+                copyUrlButton2.innerText = "Error when copying the url.";
+            }
+    });
+
+  </script>
+
+  </body>
+</html>

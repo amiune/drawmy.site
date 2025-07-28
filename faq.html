@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DrawMy.Site</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@next/css/pico.min.css" />
+    <style>
+	  header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header nav ul {
+      margin: 0;
+    }
+	  main {
+      margin-top: 2rem;
+      max-width: 800px;
+    }
+	  .hero p{
+	  max-width: 600px;
+	  margin: 0 auto;
+	  }
+	  .form{
+	     margin-top: 1rem;
+	  }
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+    }
+	  #outputURLSection{
+	      margin-top: 1rem;
+	  }
+    </style>
+  </head>
+  <body>
+    <div id="content">
+    <header class="container">
+      <a href="/" class="contrast">DrawMy.Site</a>
+      <nav>
+        <ul>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="container">
+      
+        <h1>Frequently Asked Questions</h1>
+        <br/><br/>
+      
+      <section>
+        <h3>What is DrawMy.Site?</h3>
+        <p>An automatic way to create a website for a github repo markdowns and jupyter notebooks. 
+          See an example <a href="https://drawmy.site/?ghrepo=microsoft%2FAI-For-Beginners">here</a>
+          Ideal to share study notes or a mini blog or site.
+        </p>
+      </section>
+      
+      <section>
+        <h3>How do I use DrawMy.Site?</h3>
+        <p>Just write a github username and repo <a href="/">here</a> and get a url to share in a pretty and easy way.</p>
+      </section>
+      
+      <section>
+        <h3>Is DrawMy.Site free to use?</h3>
+        <p>Yes! DrawMy.Site is free and open-source under the MIT License. You can read the code that runs this site <a href="https://github.com/amiune/drawmy.site">here</a></p>
+      </section>
+      
+      <section>
+        <h3>Why and how can be free forever with no ads?</h3>
+        <p>This project is so simple that needs no servers so it has no cost to mantain.</p>
+      </section>
+
+      <section>
+        <h3>Can I have my own url?</h3>
+        <p>Yes! Just fork the project and host it as pages in GitHub but if you are going 
+          to make that effort maybe you can just go with an static site generator like
+          <a href="https://jekyllrb.com/">Jekyll</a>
+        </p>
+      </section>
+
+      <section>
+        <h3>Can I ask for a new feature?</h3>
+        <p>
+          Yes! You can contact me directly at to <a href="#">amiune@gmail.com</a> or contact me on <a href="https://www.linkedin.com/in/amiune/">linkedin</a><br/>
+          You can also add an issue or pull request on <a href="https://github.com/amiune/drawmy.site/issues">github</a>
+        </p>
+      </section>
+
+      <section>
+        <h3>If you need a feature consider sponsoring me</h3>
+        <iframe src="https://github.com/sponsors/amiune/card" title="Sponsor amiune" height="220" width="400" style="border: 0;"></iframe>
+      </section>
+
+    </main>
+
+    <footer class="container">
+      <small>&copy; <span id="currentYear"></span> DrawMy.Site All rights reserved.</small>
+    </footer>
+    </div>
+
+    <script>
+      document.getElementById('currentYear').innerHTML = new Date().getFullYear();
+    </script>
+  </body>
+</html>
